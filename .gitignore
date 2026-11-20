@@ -1,0 +1,10 @@
+implementation plan.md
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+coverage/
+*.log
+packages/db/src/generated/
+.npm-cache/

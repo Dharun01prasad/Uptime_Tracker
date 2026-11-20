@@ -1,0 +1,53 @@
+{
+  "name": "uptime-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24.14.0 <25"
+  },
+  "scripts": {
+    "dev": "npm run build:packages && concurrently -k -n api,worker,web \"npm run dev -w @uptime/api\" \"npm run dev -w @uptime/worker\" \"npm run dev -w @uptime/web\"",
+    "build:packages": "npm run db:generate && npm run build -w @uptime/config && npm run build -w @uptime/db",
+    "build": "npm run build:packages && npm run build -w @uptime/api && npm run build -w @uptime/worker && npm run build -w @uptime/web",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "db:generate": "prisma generate",
+    "db:validate": "prisma validate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "infra:up": "docker compose up -d --wait",
+    "infra:down": "docker compose down",
+    "infra:check": "tsx scripts/check-infra.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^24.0.0",
+    "@types/express": "^5.0.0",
+    "@types/supertest": "^6.0.0",
+    "concurrently": "^9.0.0",
+    "eslint": "^10.15.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.0.0",
+    "prisma": "^7.0.0",
+    "supertest": "^7.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^4.0.0",
+    "dotenv": "^17.0.0",
+    "ioredis": "^5.0.0"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "effect": "3.22.5"
+    }
+  }
+}
